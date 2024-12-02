@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"employee-asset-system/db"
 	"employee-asset-system/utils"
 	"encoding/json"
 	"net/http"
@@ -8,7 +9,6 @@ import (
 
 	"github.com/golang-jwt/jwt/v4"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 var jwtKey = []byte("your_secret_key")
@@ -38,10 +38,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// MongoDB lookup (replace with proper client/DB setup)
-	client, _ := mongo.NewClient() // Add appropriate options
-	collection := client.Database("employee_asset_db").Collection("employees")
-
+	collection := db.Database.Collection("employee")
 	var employee bson.M
 	err := collection.FindOne(r.Context(), bson.M{
 		"$or": []bson.M{
