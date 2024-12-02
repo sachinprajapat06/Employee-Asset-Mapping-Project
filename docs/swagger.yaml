@@ -1,0 +1,521 @@
+definitions:
+  controllers.LoginRequest:
+    properties:
+      identifier:
+        type: string
+      password:
+        type: string
+    type: object
+  controllers.LoginResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  models.Asset:
+    properties:
+      asset_id:
+        type: string
+      asset_name:
+        type: string
+      asset_type:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.DashboardEmployee:
+    properties:
+      Address:
+        type: string
+      AssetCount:
+        type: integer
+      BloodGroup:
+        type: string
+      EmergencyContactNumber:
+        type: string
+      EmpId:
+        type: string
+      EmployeeEmail:
+        type: string
+      FirstName:
+        type: string
+      Gender:
+        type: string
+      LastName:
+        type: string
+      PhoneNumber:
+        type: string
+    type: object
+  models.Employee:
+    properties:
+      address:
+        type: string
+      blood_group:
+        type: string
+      created_at:
+        type: string
+      emergency_contact_number:
+        type: string
+      emp_id:
+        type: string
+      employee_email:
+        type: string
+      first_name:
+        type: string
+      gender:
+        type: string
+      id:
+        type: string
+      last_name:
+        type: string
+      password:
+        description: Use `omitempty` to exclude in JSON responses.
+        type: string
+      phone_number:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.EmployeeAssetMapping:
+    properties:
+      asset_id:
+        type: string
+      assigned_date:
+        type: string
+      employee_id:
+        type: string
+      id:
+        type: string
+      mapping_id:
+        type: string
+      notes:
+        type: string
+      status:
+        type: string
+    type: object
+  models.EmployeeList:
+    properties:
+      EmployeeList:
+        items:
+          $ref: '#/definitions/models.DashboardEmployee'
+        type: array
+    type: object
+info:
+  contact: {}
+paths:
+  /asset-mapping:
+    post:
+      consumes:
+      - application/json
+      description: Assigns a new asset to an employee
+      parameters:
+      - description: Asset mapping data
+        in: body
+        name: mapping
+        required: true
+        schema:
+          $ref: '#/definitions/models.EmployeeAssetMapping'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Assign an asset to an employee
+      tags:
+      - Asset Mapping
+  /asset-mapping/{mappingId}:
+    delete:
+      description: Deletes a specific asset mapping by its ID
+      parameters:
+      - description: Mapping ID
+        in: path
+        name: mappingId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Remove an asset mapping
+      tags:
+      - Asset Mapping
+  /asset-mapping/employee/{employeeId}:
+    get:
+      description: Fetches all asset mappings for a specific employee
+      parameters:
+      - description: Employee ID
+        in: path
+        name: employeeId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.EmployeeAssetMapping'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get all assets mapped to an employee
+      tags:
+      - Asset Mapping
+  /assets:
+    get:
+      description: Fetches all assets from the database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Asset'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get all assets
+      tags:
+      - Assets
+    post:
+      consumes:
+      - application/json
+      description: Adds a new asset to the database
+      parameters:
+      - description: Asset data
+        in: body
+        name: asset
+        required: true
+        schema:
+          $ref: '#/definitions/models.Asset'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a new asset
+      tags:
+      - Assets
+  /assets/{assetId}:
+    delete:
+      description: Deletes an asset from the database by ID
+      parameters:
+      - description: Asset ID
+        in: path
+        name: assetId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete an asset
+      tags:
+      - Assets
+    get:
+      description: Fetches details of a single asset
+      parameters:
+      - description: Asset ID
+        in: path
+        name: assetId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Asset'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get an asset by ID
+      tags:
+      - Assets
+    put:
+      consumes:
+      - application/json
+      description: Updates an asset's information by ID
+      parameters:
+      - description: Asset ID
+        in: path
+        name: assetId
+        required: true
+        type: string
+      - description: Updated data
+        in: body
+        name: data
+        required: true
+        schema:
+          additionalProperties: true
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Edit an asset's details
+      tags:
+      - Assets
+  /employees:
+    get:
+      description: Fetches all employees and their asset counts
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.EmployeeList'
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get all employees with asset count
+      tags:
+      - Employees
+    post:
+      consumes:
+      - application/json
+      description: Adds a new employee to the database
+      parameters:
+      - description: Employee data
+        in: body
+        name: employee
+        required: true
+        schema:
+          $ref: '#/definitions/models.Employee'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a new employee
+      tags:
+      - Employees
+  /employees/{employeeId}:
+    delete:
+      description: Deletes an employee from the database by ID
+      parameters:
+      - description: Employee ID
+        in: path
+        name: employeeId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete an employee
+      tags:
+      - Employees
+    get:
+      description: Fetches details of a single employee
+      parameters:
+      - description: Employee ID
+        in: path
+        name: employeeId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Employee'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get an employee by ID
+      tags:
+      - Employees
+    put:
+      consumes:
+      - application/json
+      description: Updates an employee's information by ID
+      parameters:
+      - description: Employee ID
+        in: path
+        name: employeeId
+        required: true
+        type: string
+      - description: Updated data
+        in: body
+        name: data
+        required: true
+        schema:
+          additionalProperties: true
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Edit an employee's details
+      tags:
+      - Employees
+  /login/auth:
+    post:
+      consumes:
+      - application/json
+      description: Employee login using phone number or email and password
+      parameters:
+      - description: Login Request Body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.LoginResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Login for employees
+      tags:
+      - Login
+swagger: "2.0"
